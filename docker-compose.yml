@@ -1,0 +1,13 @@
+services:
+  tagger-db:
+    image: postgres:latest
+    container_name: tagger-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${TAGGER_DB_NAME}
+      POSTGRES_USER: ${TAGGER_DB_USER}
+      POSTGRES_PASSWORD: ${TAGGER_DB_PASSWORD}
+    ports:
+      - "${TAGGER_DB_PORT}:5432"
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
