@@ -4,6 +4,8 @@ import (
     "github.com/feanor306/image_tagger/src/entities"
     "github.com/feanor306/image_tagger/src/view/layout"
 )
+
+// MediaByTag is a template that shows all media that matches a certain tag
 templ MediaByTag(media []entities.Media) {
     @layout.Base() {
         <div class="flex flex-wrap gap-4 p-4">

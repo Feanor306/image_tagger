@@ -6,6 +6,7 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
+// Config contains environment variables
 type Config struct {
 	SrvPort    string
 	DbUser     string
@@ -15,8 +16,11 @@ type Config struct {
 	DbName     string
 }
 
+// conf is the local singleton instance of Config
 var conf *Config
 
+// GetConfig will return local config or create it
+// with all the relevant env variables
 func GetConfig() *Config {
 	if conf != nil {
 		return conf

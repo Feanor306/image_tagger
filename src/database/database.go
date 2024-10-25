@@ -95,6 +95,7 @@ func (db *DB) CreateTag(tag *entities.Tag) error {
 	return err
 }
 
+// CreateMediaTags will create join table records for media_tags
 func (db *DB) CreateMediaTags(media *entities.Media) error {
 	tagNames := make([]string, 0, len(media.Tags))
 	for _, tag := range media.Tags {
@@ -164,6 +165,7 @@ func (db *DB) GetAllTags(count int) ([]entities.Tag, error) {
 	return tags, rows.Err()
 }
 
+// GetTag will return a single tag by id
 func (db *DB) GetTag(id string) (*entities.Tag, error) {
 	var tag entities.Tag
 	err := db.sq.
@@ -180,6 +182,7 @@ func (db *DB) GetTag(id string) (*entities.Tag, error) {
 	return &tag, err
 }
 
+// CreateMedia will create media in database
 func (db *DB) CreateMedia(media *entities.Media) error {
 	_, err := db.sq.
 		Insert("media").
@@ -194,6 +197,8 @@ func (db *DB) CreateMedia(media *entities.Media) error {
 	return db.CreateMediaTags(media)
 }
 
+// GetMediaIdsByTag will return media id-s
+// that are related to a tag by its id
 func (db *DB) GetMediaIdsByTag(tag *entities.Tag, count int) ([]string, error) {
 	rows, err := db.sq.
 		Select("media_id").
@@ -218,6 +223,9 @@ func (db *DB) GetMediaIdsByTag(tag *entities.Tag, count int) ([]string, error) {
 	return result, rows.Err()
 }
 
+// FindMedia will return all media
+// that is connected to a tag by id
+// with all media props set
 func (db *DB) FindMedia(tag *entities.Tag, count int) ([]entities.Media, error) {
 	// split up in 2 queries because of squirrel query nesting issues
 	mediaIdPlural, err := db.GetMediaIdsByTag(tag, count)

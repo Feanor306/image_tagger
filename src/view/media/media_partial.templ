@@ -5,6 +5,7 @@ import (
     "github.com/feanor306/image_tagger/src/entities"
 )
 
+// MediaPartial is a template that displays a single media
 templ MediaPartial(media entities.Media) {
     <div class="max-w-sm rounded overflow-hidden shadow-lg">
         <img class="w-full" src={media.Filename} alt={media.Name}>

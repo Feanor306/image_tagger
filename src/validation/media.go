@@ -11,12 +11,16 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// MEDIA_NAME_MAX_LENGTH is the maximum allowed size for Media.Name
 const MEDIA_NAME_MAX_LENGTH = 30
 
+// TagValue is used for unmarshalling tags
 type TagValue struct {
 	Value string `json:"value"`
 }
 
+// ValidateMedia will validate media params, set id if missing
+// set public filename as well as set tags
 func ValidateMedia(c echo.Context, media *entities.Media) error {
 	id := uuid.New().String()
 	if len(media.Id) == 0 {
@@ -62,6 +66,7 @@ func ValidateMedia(c echo.Context, media *entities.Media) error {
 	return nil
 }
 
+// getPublicFileName will return publically accessible url path to file
 func getPublicFileName(c echo.Context, id string) (string, error) {
 	file, err := c.FormFile("file")
 	if err != nil {

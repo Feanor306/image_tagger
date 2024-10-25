@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// main will start the server
 func main() {
 	conf := config.GetConfig()
 

@@ -11,10 +11,12 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// MediaHandler is a handler that manages media requests
 type MediaHandler struct {
 	DB *database.DB
 }
 
+// HandleMediaShowAll will render all media that contains certain tag
 func (h MediaHandler) HandleMediaShowAll(c echo.Context) error {
 	tag := entities.Tag{
 		Id: c.QueryParam("tag"),
@@ -28,6 +30,7 @@ func (h MediaHandler) HandleMediaShowAll(c echo.Context) error {
 	return render(c, media.MediaByTag(mediaPlural))
 }
 
+// HandleMediaNew will render media creation form
 func (h MediaHandler) HandleMediaNew(c echo.Context) error {
 	tags, err := h.DB.GetAllTags(100)
 	if err != nil {
@@ -42,6 +45,8 @@ func (h MediaHandler) HandleMediaNew(c echo.Context) error {
 	return render(c, media.NewMedia(strings.Join(tagNames, ",")))
 }
 
+// HandleMediaCreate will handle media creation requests
+// involving validation, file upload and saving to database
 func (h MediaHandler) HandleMediaCreate(c echo.Context) error {
 	m := entities.Media{
 		Name: c.FormValue("name"),
