@@ -6,6 +6,7 @@ import (
 
 	"github.com/Masterminds/squirrel"
 	"github.com/feanor306/image_tagger/src/config"
+	"github.com/feanor306/image_tagger/src/entities"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
@@ -80,4 +81,88 @@ func (db *DB) InitDatabase() error {
 		return err
 	}
 	return nil
+}
+
+// CreateTag will write a single Tag to database
+func (db *DB) CreateTag(tag *entities.Tag) error {
+	_, err := db.sq.
+		Insert("tags").
+		Columns("id", "name").
+		Values(tag.Id, tag.Name).
+		Exec()
+
+	return err
+}
+
+// GetAllTags will retrieve all tags from database
+func (db *DB) GetAllTags(count int) ([]entities.Tag, error) {
+	rows, err := db.sq.
+		Select("id", "name").
+		From("tags").
+		Query()
+	defer rows.Close()
+
+	if err != nil {
+		return nil, err
+	}
+
+	tags := make([]entities.Tag, 0, count)
+	for rows.Next() {
+		var tag entities.Tag
+		if err = rows.Scan(&tag.Id, &tag.Name); err != nil {
+			return tags, err
+		}
+		tags = append(tags, tag)
+	}
+
+	return tags, rows.Err()
+}
+
+func (db *DB) CreateMedia(media *entities.Media) error {
+	_, err := db.sq.
+		Insert("media").
+		Columns("id", "name", "filename").
+		Values(media.Id, media.Name, media.Filename).
+		Exec()
+
+	return err
+}
+
+func (db *DB) FindMedia(tag *entities.Tag, count int) ([]entities.Media, error) {
+	rows, err := db.sq.
+		Select("m.id", "m.name", "m.filename", "t.id", "t.name").
+		From("media m").
+		Join("media_tags mt ON m.id = mt.media_id").
+		Join("tag t ON t.id = mt.tag_id").
+		Query()
+	defer rows.Close()
+
+	if err != nil {
+		return nil, err
+	}
+
+	mediaResult := make([]entities.Media, 0, count)
+	for rows.Next() {
+		var mediaRow entities.Media
+		var tag entities.Tag
+		if err := rows.Scan(&mediaRow.Id, &mediaRow.Name, &mediaRow.Filename, &tag.Id, &tag.Name); err != nil {
+			return mediaResult, err
+		}
+
+		exists := -1
+		for idx, mr := range mediaResult {
+			if mr.Id == mediaRow.Id {
+				exists = idx
+			}
+		}
+
+		if exists >= 0 && exists < len(mediaResult) {
+			mediaResult[exists].Tags = append(mediaResult[exists].Tags, tag)
+		} else {
+			mediaRow.Tags = []entities.Tag{tag}
+			mediaResult = append(mediaResult, mediaRow)
+		}
+	}
+
+	return mediaResult, rows.Err()
 }
