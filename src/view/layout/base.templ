@@ -8,10 +8,13 @@ templ Base() {
 			<title>Media Tagger</title>
 			<script src="https://cdn.tailwindcss.com"></script>
             <script src="https://unpkg.com/htmx.org@2.0.3"></script>
+			<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify@4.31.3"></script>
+			<link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
 		</head>
 		<body>
             @Navigation()
-			<main>
+			<main class="container mx-auto">
+				<div id="errors" class="mb-2"></div>
 				{ children... }
 			</main>
 		</body>

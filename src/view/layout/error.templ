@@ -1,0 +1,9 @@
+package layout
+
+templ Error(err error) {
+    <div hx-swap-oob="beforeend:#errors">
+        <span  class="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-lg font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
+            {err.Error()}
+        </span>
+    </div>
+}
