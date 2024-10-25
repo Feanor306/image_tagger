@@ -1,0 +1,27 @@
+package tag
+
+import (
+    "github.com/feanor306/image_tagger/src/view/layout"
+    "github.com/feanor306/image_tagger/src/entities"
+)
+
+templ TagsAll(tags []entities.Tag) {
+    @layout.Base() {
+        <form 
+            hx-post="/tags"
+            hx-target="#tag-list"
+            hx-swap="beforeend"
+            class="flex gap-4 items-center bg-white p-8 rounded-lg shadow-md">
+            <label for="name" class="block text-gray-700 text-sm font-bold mb-2">New Tag name</label>
+            <input type="name" id="name" name="name" class="shadow w-64 appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Tag name">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            Create Tag
+            </button>
+        </form>
+        <div id="tag-list" class="flex flex-wrap gap-2 mt-4">
+            for _, tag := range tags {
+                @TagPartial(tag)
+            }
+        </div>
+    }
+}
