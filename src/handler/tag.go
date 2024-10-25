@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"github.com/feanor306/image_tagger/src/database"
 	"github.com/feanor306/image_tagger/src/entities"
+	"github.com/feanor306/image_tagger/src/interfaces"
 	"github.com/feanor306/image_tagger/src/validation"
 	"github.com/feanor306/image_tagger/src/view/layout"
 	"github.com/feanor306/image_tagger/src/view/tag"
@@ -11,7 +11,7 @@ import (
 
 // TagHandler is the handler for Tag endpoints
 type TagHandler struct {
-	DB *database.DB
+	DB interfaces.TagStore
 }
 
 // HandleTagShowAll will render all tags and tag creation form

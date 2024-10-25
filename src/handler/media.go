@@ -3,8 +3,8 @@ package handler
 import (
 	"strings"
 
-	"github.com/feanor306/image_tagger/src/database"
 	"github.com/feanor306/image_tagger/src/entities"
+	"github.com/feanor306/image_tagger/src/interfaces"
 	"github.com/feanor306/image_tagger/src/validation"
 	"github.com/feanor306/image_tagger/src/view/layout"
 	"github.com/feanor306/image_tagger/src/view/media"
@@ -13,7 +13,7 @@ import (
 
 // MediaHandler is a handler that manages media requests
 type MediaHandler struct {
-	DB *database.DB
+	DB interfaces.CompositeStore
 }
 
 // HandleMediaShowAll will render all media that contains certain tag
