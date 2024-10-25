@@ -14,7 +14,7 @@ type TagHandler struct {
 }
 
 func (h TagHandler) HandleTagShowAll(c echo.Context) error {
-	allTags, err := h.DB.GetAllTags(100)
+	allTags, err := h.DB.GetAllTags(MAX_SIZE)
 	if err != nil {
 		return render(c, layout.Error(err))
 	}
