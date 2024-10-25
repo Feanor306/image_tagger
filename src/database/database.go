@@ -3,22 +3,24 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	"log"
 
+	"github.com/Masterminds/squirrel"
 	"github.com/feanor306/image_tagger/src/config"
+
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
-// db handles database connection
-type db struct {
+// DB handles database connection
+type DB struct {
 	conn *sql.DB
-	conf *config.Config
+	sq   squirrel.StatementBuilderType
 }
 
 // dbInstance is a singleton db instance
-var dbInstance *db
+var dbInstance *DB
 
 // GetDatabase creates or returns the database instance
-func GetDatabase(conf *config.Config) (*db, error) {
+func GetDatabase(conf *config.Config) (*DB, error) {
 	if dbInstance != nil {
 		return dbInstance, nil
 	}
@@ -30,21 +32,20 @@ func GetDatabase(conf *config.Config) (*db, error) {
 		return nil, err
 	}
 
-	dbInstance = &db{
+	dbInstance = &DB{
 		conn: dbConn,
-		conf: conf,
+		sq:   squirrel.StatementBuilder.PlaceholderFormat(squirrel.Dollar).RunWith(dbConn),
 	}
 	return dbInstance, nil
 }
 
 // Close closes the database connection.
-func (db *db) Close() error {
-	log.Printf("Disconnected from database: %s", db.conf.DbName)
+func (db *DB) Close() error {
 	return db.conn.Close()
 }
 
 // InitDatabase will create all the tables and indices
-func (db *db) InitDatabase() error {
+func (db *DB) InitDatabase() error {
 	_, err := db.conn.Exec(`
 		CREATE TABLE IF NOT EXISTS tags (
 			id text NOT NULL,
@@ -54,25 +55,25 @@ func (db *db) InitDatabase() error {
 		CREATE UNIQUE INDEX IF NOT EXISTS tags_id_index ON tags USING btree (id text_pattern_ops);
 		CREATE UNIQUE INDEX IF NOT EXISTS tags_name_index ON tags USING btree (name text_pattern_ops);
 
-		CREATE TABLE IF NOT EXISTS images (
+		CREATE TABLE IF NOT EXISTS media (
 			id text NOT NULL,
 			name text NOT NULL,
 			filename text NOT NULL,
 			PRIMARY KEY (id)
 		);
-		CREATE UNIQUE INDEX IF NOT EXISTS images_id_index ON images USING btree (filename text_pattern_ops);
-		CREATE INDEX IF NOT EXISTS images_name_index ON images USING btree (name text_pattern_ops);
-		CREATE INDEX IF NOT EXISTS images_filename_index ON images USING btree (filename text_pattern_ops);
+		CREATE UNIQUE INDEX IF NOT EXISTS media_id_index ON media USING btree (filename text_pattern_ops);
+		CREATE INDEX IF NOT EXISTS media_name_index ON media USING btree (name text_pattern_ops);
+		CREATE INDEX IF NOT EXISTS media_filename_index ON media USING btree (filename text_pattern_ops);
 
-		CREATE TABLE IF NOT EXISTS image_tags (
-			image_id text NOT NULL,
+		CREATE TABLE IF NOT EXISTS media_tags (
+			media_id text NOT NULL,
 			tag_id text NOT NULL,
-			PRIMARY KEY (image_id, tag_id),
-			FOREIGN KEY (image_id) REFERENCES images (id),
+			PRIMARY KEY (media_id, tag_id),
+			FOREIGN KEY (media_id) REFERENCES media (id),
 			FOREIGN KEY (tag_id) REFERENCES tags (id)
 		);
-		CREATE INDEX idx_image_tags_image_id ON image_tags (image_id);
-		CREATE INDEX idx_image_tags_tag_id ON image_tags (tag_id);
+		CREATE INDEX IF NOT EXISTS media_tag_media_id_index ON media_tags (media_id);
+		CREATE INDEX IF NOT EXISTS media_tag_tag_id_index ON media_tags (tag_id);
 	`)
 
 	if err != nil {
