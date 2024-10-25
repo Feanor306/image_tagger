@@ -1,0 +1,15 @@
+package media
+
+import (
+    "github.com/feanor306/image_tagger/src/entities"
+    "github.com/feanor306/image_tagger/src/view/layout"
+)
+templ MediaByTag(media []entities.Media) {
+    @layout.Base() {
+        <div class="flex flex-wrap gap-4 p-4">
+            for _, m := range media {
+                @MediaPartial(m)
+            }
+        </div>
+    }
+}

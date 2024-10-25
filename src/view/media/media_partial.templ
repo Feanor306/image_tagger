@@ -1,0 +1,20 @@
+package media
+
+import (
+    tagview "github.com/feanor306/image_tagger/src/view/tag"
+    "github.com/feanor306/image_tagger/src/entities"
+)
+
+templ MediaPartial(media entities.Media) {
+    <div class="max-w-sm rounded overflow-hidden shadow-lg">
+        <img class="w-full" src={media.Filename} alt={media.Name}>
+        <div class="px-6 py-4">
+            <div class="font-bold text-xl mb-2">{media.Name}</div>
+            <div id="tag-list" class="flex flex-wrap gap-2 mt-4">
+                for _, tag := range media.Tags {
+                    @tagview.TagPartial(tag)
+                }
+            </div>  
+        </div>
+    </div>
+}
