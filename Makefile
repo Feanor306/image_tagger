@@ -21,23 +21,52 @@ build: templ-install
 	@go build -o bin/main cmd/api/main.go
 
 # Run the application
-run:
-	@go run cmd/api/main.go
+run: build
+	@./bin/main
 
 # Create DB container
 db-up:
-	@if docker compose up --build -d 2>/dev/null; then \
+	@if docker compose -f dockerized/database.yml up --build -d 2>/dev/null; then \
 		: ; \
 	else \
 		echo "Falling back to Docker Compose V1"; \
-		docker-compose up --build -d; \
+		docker-compose -f dockerized/database.yml up --build -d; \
 	fi
 
 # Shutdown DB container
 db-down:
-	@if docker compose down 2>/dev/null; then \
+	@if docker compose -f dockerized/database.yml down 2>/dev/null; then \
 		: ; \
 	else \
 		echo "Falling back to Docker Compose V1"; \
-		docker-compose down; \
+		docker-compose -f dockerized/database.yml down; \
 	fi
+
+# Create test DB container
+test-db-up:
+	@if docker compose -f dockerized/db_test.yml up --build -d 2>/dev/null; then \
+		: ; \
+	else \
+		echo "Falling back to Docker Compose V1"; \
+		docker-compose -f dockerized/db_test.yml up --build -d; \
+	fi
+
+test-db-wait:
+	@echo "Creating test db..." 
+	sleep 10
+
+# Shutdown test DB container
+test-db-down:
+	@if docker compose -f dockerized/db_test.yml down 2>/dev/null; then \
+		: ; \
+	else \
+		echo "Falling back to Docker Compose V1"; \
+		docker-compose -f dockerized/db_test.yml down; \
+	fi
+
+run-tests: 
+	@if go test ./src/... 2>/dev/null; then \
+		: ; \
+	fi
+
+test: test-db-up test-db-wait run-tests test-db-down

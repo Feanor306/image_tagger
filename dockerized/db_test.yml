@@ -1,0 +1,11 @@
+services:
+  tagger-db-test:
+    image: postgres:latest
+    container_name: tagger-db-test
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: test
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+    ports:
+      - "5432:5432"

@@ -63,7 +63,7 @@ func (db *DB) InitDatabase() error {
 			filename text NOT NULL,
 			PRIMARY KEY (id)
 		);
-		CREATE UNIQUE INDEX IF NOT EXISTS media_id_index ON media USING btree (filename text_pattern_ops);
+		CREATE UNIQUE INDEX IF NOT EXISTS media_id_index ON media USING btree (id text_pattern_ops);
 		CREATE INDEX IF NOT EXISTS media_name_index ON media USING btree (name text_pattern_ops);
 		CREATE INDEX IF NOT EXISTS media_filename_index ON media USING btree (filename text_pattern_ops);
 
