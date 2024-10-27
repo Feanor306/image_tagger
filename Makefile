@@ -24,6 +24,11 @@ build: templ-install
 run: build
 	@./bin/main
 
+# installs godoc and runs local doc server at http://localhost:6060
+doc:
+	go install golang.org/x/tools/cmd/godoc@latest 
+	godoc -http=:6060 -goroot=.
+
 # Create DB container
 db-up:
 	@if docker compose -f dockerized/database.yml up --build -d 2>/dev/null; then \

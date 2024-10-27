@@ -14,15 +14,22 @@ cp .env.stub .env
 # or change ownership of ./data to current user after starting up DB
 mkdir data
 
-# Build templates and project
-make build
-
 # Start up development database
 make db-up
 
 # shut down development database
 make db-down
 
+# Build templates and project
+make build
+
 # run the app
 make run
+
+# run tests
+make test
+
+# view docs - run make doc and visit local doc url
+make doc
+http://localhost:6060
 ```
