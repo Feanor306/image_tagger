@@ -35,5 +35,5 @@ In retrospect, using a more powerful ORM like GORM would have been easier to man
 2. Safeguard against media.tags that don't exist
 3. Full dockerization of app as well as db
 4. gorm instead of squirrel for DB access
-5. full CRUD functionality for both tag and media
-
+5. Full CRUD functionality for both tag and media
+6. Add more tests
