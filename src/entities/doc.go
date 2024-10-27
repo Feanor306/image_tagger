@@ -1,2 +1,2 @@
-// package entities contains commonly used structs
+// Package entities contains commonly used structs
 package entities

@@ -1,2 +1,2 @@
-// package database contains database specific functionality
+// Package database contains database specific functionality
 package database

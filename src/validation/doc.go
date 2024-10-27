@@ -1,2 +1,2 @@
-// package validation contains validation logic
+// Package validation contains validation logic
 package validation

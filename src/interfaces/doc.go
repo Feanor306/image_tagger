@@ -1,2 +1,2 @@
-// package interfaces contains commonly used interfaces
+// Package interfaces contains commonly used interfaces
 package interfaces

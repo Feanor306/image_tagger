@@ -1,2 +1,2 @@
-// package config manages env variables
+// Package config manages env variables
 package config

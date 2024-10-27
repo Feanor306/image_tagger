@@ -1,2 +1,2 @@
-// package handler contains endpoint handlers
+// Package handler contains endpoint handlers
 package handler

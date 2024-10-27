@@ -1,2 +1,2 @@
-// layout contains commonly used templates
+// Package layout contains commonly used templates
 package layout
